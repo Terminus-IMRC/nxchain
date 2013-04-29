@@ -20,6 +20,10 @@
 		struct coord toafillroad[Ceilings][X-1];
 	};
 
+	extern struct st_chain ret[Ceilings];
+	extern int chaincont;
+
 	void will_and_die(char*, int);
+	void printchain();
 
 #endif
