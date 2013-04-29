@@ -40,7 +40,7 @@ void chain_name()
 
 	for(i=0; i<X; i++){
 		subst_code(i, i);
-		subst_code(i, X-1);
+		subst_code(i, X-1-i);
 	}
 
 	chk_afill();
@@ -64,7 +64,7 @@ void chain_e1_label()
 		else if(c==X-4)
 			ify=E3;
 		else{
-			sprintf(s, "chain: fatal exception in %s#%d.", __FILE__, __LINE__);
+			sprintf(s, "%s: %d: fatal exception(i=%d, c=%d).", __FILE__, __LINE__, i, c);
 			will_and_die(s, 1);
 		}
 		subst_chain(ify, 0, i);
