@@ -30,6 +30,7 @@ void printchain()
 				break;
 		}
 		printf("\tidentifier: %s\n", s);
+		printf("\ttoafillcont: %d\n", ret[i].toafillcont);
 	}
 	return;
 }
