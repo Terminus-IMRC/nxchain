@@ -21,10 +21,15 @@ void add_afill(enum fbconst t, int x, int y);
 
 void chain_main_nx(void)
 {
-	int i;
+	int i, j;
 
-	for(i=0; i<X; i++)
+	for(i=0; i<X; i++){
 		ret[i].toafillcont=0;
+		tatecont[i]=0;
+		yokocont[i]=0;
+		for(j=0; j<X; j++)
+			code[i][j]=0;
+	}
 
 	chain_name();
 	chain_e1_label();
@@ -40,7 +45,8 @@ void chain_name()
 
 	for(i=0; i<X; i++){
 		subst_code(i, i);
-		subst_code(i, X-1-i);
+		if(!(X%2 && i==(X-1-i)))
+			subst_code(i, X-1-i);
 	}
 
 	chk_afill();
@@ -57,20 +63,31 @@ void chain_e1_label()
 
 	for(i=0; i<X; i++){
 		c=yokocont[i];
-		if(c==X-2)
+		switch(c){
+		case X-2:
 			ify=E1;
-		else if(c==X-1)
+			break;
+		case X-1:
 			ify=E2;
-		else if(c==X-4)
+			break;
+		case X-4:
 			ify=E3;
-		else{
+			break;
+		case X:
+			/* ignore */
+			break;
+		default:
 			sprintf(s, "%s: %d: fatal exception(i=%d, c=%d).", __FILE__, __LINE__, i, c);
 			will_and_die(s, 1);
+			break;
 		}
+
 		subst_chain(ify, 0, i);
+
 		for(j=0; j<X; j++)
 			if(!code[j][i])
 				subst_code(j, i);
+
 		chk_afill();
 	}
 	return;
@@ -105,12 +122,21 @@ void subst_chain(enum ident ify, int x, int y)
 void chk_afill()
 {
 	int i;
+	_Bool aflag=0;
 
-	for(i=0; i<X; i++)
-		if(tatecont[i]==X-1)
+	for(i=0; i<X; i++){
+		if(tatecont[i]==X-1){
 			find_blank_and_add_afill(FB_TATE, i);
-		if(yokocont[i]==X-1)
+			aflag=1;
+		}
+		if(yokocont[i]==X-1){
 			find_blank_and_add_afill(FB_YOKO, i);
+			aflag=1;
+		}
+		if(aflag)
+			i=-1;
+		aflag=0;
+	}
 
 	return;
 }
@@ -121,16 +147,19 @@ void find_blank_and_add_afill(enum fbconst t, int elem)
 	int blank=-1;
 
 	for(i=0; i<X; i++)
-		if(t==FB_TATE)
-			if(!code[elem][i])
+		if(t==FB_TATE){
+			if(!code[elem][i]){
 				blank=i;
-			else
 				add_afill(t, elem, i);
-		else
-			if(!code[i][elem])
+				break;
+			}
+		}else{
+			if(!code[i][elem]){
 				blank=i;
-			else
 				add_afill(t, i, elem);
+				break;
+			}
+		}
 	assert(blank != -1);
 }
 
@@ -138,6 +167,7 @@ void add_afill(enum fbconst t, int x, int y)
 {
 	int i, c=0;
 
+	subst_code(x, y);
 	ret[chaincont].toafill[ret[chaincont].toafillcont].x=x;
 	ret[chaincont].toafill[ret[chaincont].toafillcont].y=y;
 	ret[chaincont].toafillcont++;
