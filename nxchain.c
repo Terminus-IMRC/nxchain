@@ -64,13 +64,13 @@ void chain_e1_label()
 	for(i=0; i<X; i++){
 		c=yokocont[i];
 		switch(c){
-		case X-2:
+		case 2:
 			ify=E1;
 			break;
-		case X-1:
+		case 1:
 			ify=E2;
 			break;
-		case X-4:
+		case 4:
 			ify=E3;
 			break;
 		case X:
