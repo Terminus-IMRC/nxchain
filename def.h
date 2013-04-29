@@ -20,4 +20,6 @@
 		struct coord toafillroad[Ceilings][X-1];
 	};
 
+	void will_and_die(char*, int);
+
 #endif

@@ -53,6 +53,7 @@ void chain_e1_label()
 	int i, j;
 	int c;
 	enum ident ify;
+	char s[100];
 
 	for(i=0; i<X; i++){
 		c=yokocont[i];
@@ -62,6 +63,10 @@ void chain_e1_label()
 			ify=E2;
 		else if(c==X-4)
 			ify=E3;
+		else{
+			sprintf(s, "chain: fatal exception in %s#%d.", __FILE__, __LINE__);
+			will_and_die(s, 1);
+		}
 		subst_chain(ify, 0, i);
 		for(j=0; j<X; j++)
 			if(!code[j][i])
